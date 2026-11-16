@@ -1,9 +1,8 @@
 
 import hashlib
 import json
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
-
 
 DATA_DIRECTORY = Path("data/raw/UNSW-NB15")
 OUTPUT_DIRECTORY = Path("docs/datasets")
@@ -42,7 +41,7 @@ def main() -> None:
             "unsw-nb15-dataset"
         ),
         "generated_at_utc": datetime.now(
-            timezone.utc
+            UTC
         ).isoformat(),
         "files": [],
     }
