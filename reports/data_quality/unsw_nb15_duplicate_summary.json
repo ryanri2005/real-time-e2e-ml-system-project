@@ -1,0 +1,51 @@
+{
+  "dataset": "UNSW-NB15",
+  "generated_at_utc": "2026-11-16T17:55:15.621899+00:00",
+  "method": {
+    "algorithm": "SHA-256",
+    "record_definition": "Two records are duplicates when all parsed CSV field values are identical.",
+    "serialization": "Each UTF-8 field is encoded with its byte length before its contents. This prevents delimiter ambiguity.",
+    "normalization": "No trimming, case conversion, missing-value replacement, or other field normalization is performed.",
+    "csv_formatting": "CSV quoting and line-ending differences do not create different records when parsed field values are identical.",
+    "collision_protection": "The complete serialized record is compared whenever an existing digest is encountered.",
+    "record_numbers": "Source locations use one-based logical CSV record numbers.",
+    "raw_data_handling": "Original CSV files are read only and are never modified."
+  },
+  "expected_columns": 49,
+  "total_records": 2540047,
+  "unique_records": 2059414,
+  "duplicate_groups": 88210,
+  "records_in_duplicate_groups": 568843,
+  "duplicate_excess_records": 480633,
+  "same_file_duplicate_groups": 88207,
+  "cross_file_duplicate_groups": 4,
+  "same_file_extra_occurrences": 480629,
+  "duplicate_occurrence_locations": 568843,
+  "files": [
+    {
+      "filename": "UNSW-NB15_1.csv",
+      "records": 700001,
+      "size_bytes": 168979718
+    },
+    {
+      "filename": "UNSW-NB15_2.csv",
+      "records": 700001,
+      "size_bytes": 165221021
+    },
+    {
+      "filename": "UNSW-NB15_3.csv",
+      "records": 700001,
+      "size_bytes": 154588103
+    },
+    {
+      "filename": "UNSW-NB15_4.csv",
+      "records": 440044,
+      "size_bytes": 97588754
+    }
+  ],
+  "output_files": {
+    "summary": "unsw_nb15_duplicate_summary.json",
+    "groups": "unsw_nb15_duplicate_groups.csv",
+    "occurrences": "unsw_nb15_duplicate_occurrences.csv"
+  }
+}
