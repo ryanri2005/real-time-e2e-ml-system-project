@@ -241,7 +241,7 @@ htmlcov/
 !.env.example
 
 # Local datasets and generated ML artifacts
-data/
+/data/
 mlruns/
 artifacts/
 outputs/
