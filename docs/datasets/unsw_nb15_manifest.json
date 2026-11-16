@@ -1,0 +1,32 @@
+{
+    "dataset": "UNSW-NB15",
+    "source": "https://research.unsw.edu.au/projects/unsw-nb15-dataset",
+    "generated_at_utc": "2026-11-16T04:50:23.543039+00:00",
+    "files": [
+        {
+            "filename": "UNSW-NB15_1.csv",
+            "size_bytes": 168979718,
+            "sha256": "7d851bbeabd27894ce39c8e78835c73341fc946652fb7743b9eff193b55eb511"
+        },
+        {
+            "filename": "UNSW-NB15_2.csv",
+            "size_bytes": 165221021,
+            "sha256": "6130ad02873cc6069ae695cf2844f2e8c2e9a9a1b7532dd82ab8f202757cacf8"
+        },
+        {
+            "filename": "UNSW-NB15_3.csv",
+            "size_bytes": 154588103,
+            "sha256": "ae990a96c3dfcd425ce2801aadb1727a34d5e0ae6d8215dbcdae60dedfaef640"
+        },
+        {
+            "filename": "UNSW-NB15_4.csv",
+            "size_bytes": 97588754,
+            "sha256": "cdf563692d51d405541dd659ddcdad9fa01f001f05fe9fc4b67f00ca12fbc96a"
+        },
+        {
+            "filename": "NUSW-NB15_features.csv",
+            "size_bytes": 4044,
+            "sha256": "c55f19cceebb6360dc50f44f8a5f246ccefbcf8a6c604ac1ad46e643869cafce"
+        }
+    ]
+}
