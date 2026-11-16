@@ -5,6 +5,7 @@ from a1.data.csv_validation import (
     validate_csv_structure,
 )
 from a1.data.schema import (
+    load_feature_metadata,
     load_feature_names,
 )
 
@@ -86,10 +87,10 @@ def test_csv_structure_rejects_malformed_csv_quoting(
         )
 
 
-def test_feature_names_are_normalized(
+def test_feature_names_and_types_are_normalized(
     tmp_path,
 ) -> None:
-    """Metadata names should be normalized consistently."""
+    """Metadata names and feature types should be normalized."""
 
     metadata_path = tmp_path / "features.csv"
 
@@ -106,8 +107,19 @@ def test_feature_names_are_normalized(
         "CT_src_ ltm",
     ])
 
+    feature_types = ["integer"] * 44
+
+    feature_types.extend([
+        "binary",
+        "nominal",
+        "timestamp",
+        "timestamp",
+        "integer",
+    ])
+
     metadata = pd.DataFrame({
         "Name": names,
+        "Type": feature_types,
         "Description": ["test"] * len(names),
     })
 
@@ -117,8 +129,13 @@ def test_feature_names_are_normalized(
         encoding="cp1252",
     )
 
+    feature_definitions = load_feature_metadata(
+        metadata_path
+    )
+
     feature_names = load_feature_names(metadata_path)
 
+    assert len(feature_definitions) == 49
     assert len(feature_names) == 49
     assert len(set(feature_names)) == 49
 
@@ -127,3 +144,13 @@ def test_feature_names_are_normalized(
     assert "stime" in feature_names
     assert "ltime" in feature_names
     assert "ct_src_ltm" in feature_names
+
+    feature_lookup = {
+        feature.name: feature
+        for feature in feature_definitions
+    }
+
+    assert feature_lookup["label"].feature_type == "binary"
+    assert feature_lookup["attack_cat"].feature_type == "nominal"
+    assert feature_lookup["stime"].feature_type == "timestamp"
+    assert feature_lookup["ct_src_ltm"].feature_type == "integer"

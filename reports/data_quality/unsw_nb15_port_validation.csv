@@ -1,0 +1,3 @@
+feature,hexadecimal_values,dash_sentinel_values,numeric_values,transport_protocol_numeric_values,transport_protocol_unparsed_values,transport_protocol_non_finite_values,transport_protocol_out_of_range_values,non_port_protocol_numeric_values
+sport,6,2,2540045,2487034,0,0,0,53011
+dsport,297,7,2540040,2487034,0,0,0,53006

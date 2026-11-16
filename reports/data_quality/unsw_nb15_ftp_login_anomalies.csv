@@ -1,0 +1,12 @@
+is_ftp_login,ct_ftp_cmd,proto,service,state,attack_cat,label,records
+2,2,tcp,-,CON,,0,1
+2,2,tcp,ftp,CON,,0,15
+2,2,tcp,ftp,FIN,,0,6
+2,2,tcp,ftp,FIN,Exploits,1,4
+2,2,tcp,ftp,FIN,Fuzzers,1,4
+4,4,tcp,-,CON,,0,1
+4,4,tcp,-,FIN,,0,1
+4,4,tcp,ftp,CON,,0,9
+4,4,tcp,ftp,CON,Exploits,1,8
+4,4,tcp,ftp,FIN,,0,129
+4,4,tcp,ftp,FIN,Exploits,1,8

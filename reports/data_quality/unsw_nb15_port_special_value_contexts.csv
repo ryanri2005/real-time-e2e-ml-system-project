@@ -1,0 +1,9 @@
+feature,protocol,raw_value,records
+dsport,esp,0x20205321,2
+dsport,icmp,-,7
+dsport,icmp,0xc0a8,54
+dsport,icmp,0xcc09,241
+sport,esp,-,1
+sport,icmp,-,1
+sport,icmp,0x000b,2
+sport,icmp,0x000c,4

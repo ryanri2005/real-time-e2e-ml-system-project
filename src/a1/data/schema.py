@@ -1,4 +1,5 @@
 import re
+from dataclasses import dataclass
 from pathlib import Path
 
 import pandas as pd
@@ -22,6 +23,23 @@ REQUIRED_COLUMNS = {
     "stime",
     "ltime",
 }
+
+ALLOWED_FEATURE_TYPES = {
+    "nominal",
+    "integer",
+    "float",
+    "timestamp",
+    "binary",
+}
+
+
+@dataclass(frozen=True)
+class FeatureDefinition:
+    """Metadata describing one UNSW-NB15 feature."""
+
+    name: str
+    feature_type: str
+    description: str
 
 
 def find_project_root(
@@ -49,10 +67,10 @@ def find_project_root(
     )
 
 
-def load_feature_names(
+def load_feature_metadata(
     metadata_path: Path,
-) -> list[str]:
-    """Load and validate the official UNSW-NB15 feature names."""
+) -> tuple[FeatureDefinition, ...]:
+    """Load and validate feature names, types, and descriptions."""
 
     if not metadata_path.is_file():
         raise FileNotFoundError(
@@ -66,48 +84,89 @@ def load_feature_names(
         engine="python",
     )
 
-    metadata.columns = [
-        str(column).strip()
+    column_lookup = {
+        str(column).strip().casefold(): column
         for column in metadata.columns
-    ]
+    }
 
-    name_column = None
+    required_metadata_fields = {
+        "name",
+        "type",
+    }
 
-    for column in metadata.columns:
-        if column.casefold() == "name":
-            name_column = column
-            break
-
-    if name_column is None:
-        raise ValueError(
-            "Could not find the Name column "
-            "in the feature metadata."
-        )
-
-    raw_names = (
-        metadata[name_column]
-        .dropna()
-        .astype(str)
-        .tolist()
+    missing_fields = (
+        required_metadata_fields - set(column_lookup)
     )
 
-    feature_names = []
+    if missing_fields:
+        raise ValueError(
+            "Required metadata fields are missing: "
+            f"{sorted(missing_fields)}"
+        )
 
-    for raw_name in raw_names:
-        cleaned_name = re.sub(
+    name_column = column_lookup["name"]
+    type_column = column_lookup["type"]
+    description_column = column_lookup.get("description")
+
+    feature_definitions = []
+
+    for _, row in metadata.iterrows():
+
+        raw_name = row[name_column]
+
+        if pd.isna(raw_name):
+            continue
+
+        feature_name = re.sub(
             r"\s+",
             "",
-            raw_name.strip(),
+            str(raw_name).strip(),
+        ).casefold()
+
+        if not feature_name:
+            continue
+
+        raw_type = row[type_column]
+
+        if pd.isna(raw_type):
+            raise ValueError(
+                f"Missing feature type for {feature_name}."
+            )
+
+        feature_type = str(raw_type).strip().casefold()
+
+        if feature_type not in ALLOWED_FEATURE_TYPES:
+            raise ValueError(
+                f"Unsupported feature type '{feature_type}' "
+                f"for feature '{feature_name}'."
+            )
+
+        description = ""
+
+        if description_column is not None:
+            raw_description = row[description_column]
+
+            if not pd.isna(raw_description):
+                description = str(raw_description).strip()
+
+        feature = FeatureDefinition(
+            name=feature_name,
+            feature_type=feature_type,
+            description=description,
         )
 
-        if cleaned_name:
-            feature_names.append(cleaned_name.casefold())
+        feature_definitions.append(feature)
 
-    if len(feature_names) != EXPECTED_FEATURE_COUNT:
+    if len(feature_definitions) != EXPECTED_FEATURE_COUNT:
         raise ValueError(
-            f"Expected {EXPECTED_FEATURE_COUNT} feature names, "
-            f"but found {len(feature_names)}."
+            f"Expected {EXPECTED_FEATURE_COUNT} feature definitions, "
+            f"but found {len(feature_definitions)}."
         )
+
+    feature_names = [
+        feature.name
+        for feature in feature_definitions
+    ]
 
     if len(set(feature_names)) != EXPECTED_FEATURE_COUNT:
         raise ValueError(
@@ -123,4 +182,17 @@ def load_feature_names(
             f"{sorted(missing_columns)}"
         )
 
-    return feature_names
+    return tuple(feature_definitions)
+
+
+def load_feature_names(
+    metadata_path: Path,
+) -> list[str]:
+    """Load normalized feature names from the metadata file."""
+
+    feature_definitions = load_feature_metadata(metadata_path)
+
+    return [
+        feature.name
+        for feature in feature_definitions
+    ]

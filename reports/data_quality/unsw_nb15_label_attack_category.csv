@@ -1,0 +1,12 @@
+label,attack_cat,records
+0,,2218764
+1,Analysis,2677
+1,Backdoor,1795
+1,Backdoors,534
+1,DoS,16353
+1,Exploits,44525
+1,Fuzzers,24246
+1,Generic,215481
+1,Reconnaissance,13987
+1,Shellcode,1511
+1,Worms,174
